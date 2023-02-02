@@ -1,0 +1,96 @@
+-- To lock a server, type:  .lock server  in-game chat;
+-- To unlock a server, type:  .unlock server  in-game chat.
+-- Feel free to customize the netcode and the hud as much as you want. Also add 
+-- Created by Azoth_s on 2023/02/02
+
+--------------------------------------------------------------------------CONFIG--------------------------------------------------------------------------
+
+local banReason = "You are banned from this game." -- Displayed to banned people if they try to join your game.
+local ServerLockReason = "This server is locked." -- Displayed to  people if they try to join your server if it's locked.
+
+local adminlist = { -- Who will be able to use .lock and .unlock server, aka. who can lock and unlock the server. 
+
+	"Azoth_s";
+	"Roblox";
+
+}
+
+local whitelist = { -- Who will be able to join the server even if it's locked.
+
+	"Azoth_s";
+	"Roblox";
+	"Joe Mama";
+
+}
+
+local banlist = { -- These people are automatically banned from your game. This means that they will not be able to join any server.
+	
+	"JohnDoe";
+	
+}
+
+--------------------------------------------------------------------------END OF CONFIG--------------------------------------------------------------------------
+
+-- Only edit this if you know something about coding, if you delete or change something, there is a chance that the script will no longer work.
+
+local Players = game:GetService("Players")
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Locked = false
+
+Players.PlayerAdded:Connect(function(player)
+	
+	if Locked == true then
+		
+		if not table.find(whitelist, adminlist, player.Name) then
+			
+			warn(player.Name.." tried to join, but the server is locked!")
+			player:Kick(ServerLockReason)
+			
+		end
+		
+	end
+	
+	player.Chatted:Connect(function(message)
+		
+		if table.find(adminlist, player.Name) then
+			
+			if message == ".lock server" then
+				
+				warn("SERVER LOCKED")
+				print("Server is now locked. Players will not be able to join.")
+				Locked = true
+				ReplicatedStorage.BasicGeneralRE:FireClient(player, "Lock", true)
+				
+			elseif message == ".unlock server" then
+				
+				warn("SERVER UNLOCKED")
+				print("Server is now unlocked. Players will be able to join.")
+				Locked = false
+				ReplicatedStorage.BasicGeneralRE:FireClient(player, "Lock", false)
+				
+			end
+			
+		end
+		
+	end)
+	
+	if table.find(whitelist, player.Name) then
+		
+			ReplicatedStorage.BasicGeneralRE:FireClient(player, "Lock", Locked)		
+		
+	end
+	
+	if table.find(adminlist, player.Name) then
+
+		ReplicatedStorage.BasicGeneralRE:FireClient(player, "Lock", Locked)		
+
+	end
+	
+	if table.find(banlist, player.Name) then
+		
+		player:Kick(banReason)
+		
+	end
+	
+end)
