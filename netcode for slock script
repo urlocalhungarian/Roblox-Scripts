@@ -3,6 +3,11 @@
 -- Feel free to customize the netcode and the hud as much as you want. Also add 
 -- Created by Azoth_s on 2023/02/02
 
+-- If you accidentally caused some problems in this script or anything, here is the github link for this script: 
+--                         https://github.com/urlocalhungarian/Roblox-Scripts/blob/main/netcode%20for%20slock%20script
+
+-- Script Version: V1.1
+
 --------------------------------------------------------------------------CONFIG--------------------------------------------------------------------------
 
 local banReason = "You are banned from this game." -- Displayed to banned people if they try to join your game.
